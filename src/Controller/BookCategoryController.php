@@ -13,7 +13,14 @@ class BookCategoryController extends AbstractController
     {
     }
 
-    #[Route('/api/v1/book/categories', name: 'book-categories')]
+    /**
+     * @OA\Response(
+     *     response=200,
+     *     description="Returns book categories",
+     *     @Model(type=BookCategoryListResponse::class)
+     * )
+     */
+    #[Route('/api/v1/book/categories', methods: ['GET'])]
     public function categories(): Response
     {
         return $this->json($this->bookCategoryService->getCategories());
