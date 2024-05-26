@@ -27,6 +27,8 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/evenement/evenement" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/fidry/cpu-core-counter" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/friendsofphp/php-cs-fixer" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/helmich/phpunit-json-assert" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/justinrainbow/json-schema" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/masterminds/html5" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/myclabs/deep-copy" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/nelmio/api-doc-bundle" />
@@ -69,6 +71,7 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/sebastian/recursion-context" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/sebastian/type" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/sebastian/version" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/softcreatr/jsonpath" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/asset" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/browser-kit" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/cache" />
