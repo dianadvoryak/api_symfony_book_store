@@ -12,11 +12,9 @@ use App\Repository\BookRepository;
 use App\Service\BookService;
 use App\Tests\AbstractTestCase;
 use Doctrine\Common\Collections\ArrayCollection;
-use PHPUnit\Framework\TestCase;
 
 class BookServiceTest extends AbstractTestCase
 {
-
     public function testGetBooksByCategoryNotFound()
     {
         $bookRepository = $this->createMock(BookRepository::class);
@@ -66,7 +64,7 @@ class BookServiceTest extends AbstractTestCase
             ->setImage('http://localhost/test.png')
             ->setCategories(new ArrayCollection([$category]))
             ->setPublicationDate(new \DateTimeImmutable('2020-10-10'));
-//            ->setFormats(new ArrayCollection([$join]));
+        //            ->setFormats(new ArrayCollection([$join]));
 
         $this->setEntityId($book, 123);
 
