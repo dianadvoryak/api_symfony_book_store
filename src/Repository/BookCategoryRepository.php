@@ -15,4 +15,12 @@ class BookCategoryRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, BookCategory::class);
     }
+
+    /**
+     * @return BookCategory[]
+     */
+    public function findAllSortByTitle(): array
+    {
+        return $this->findBy([], ['title' => 'ASC']);
+    }
 }

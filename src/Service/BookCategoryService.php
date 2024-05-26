@@ -15,7 +15,7 @@ class BookCategoryService
 
     public function getCategories(): BookCategoryListResponse
     {
-        $categories = $this->bookCategoryRepository->findBy([], ['title' => 'ASC']);
+        $categories = $this->bookCategoryRepository->findAllSortByTitle();
         $items = array_map(
             fn (BookCategory $bookCategory) => new BookCategoryListItem(
                 $bookCategory->getId(), $bookCategory->getTitle(), $bookCategory->getSlug()

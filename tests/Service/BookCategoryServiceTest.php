@@ -2,14 +2,12 @@
 
 namespace App\Tests\Service;
 
-use App\Entity\Book;
 use App\Entity\BookCategory;
 use App\Model\BookCategoryListItem;
 use App\Model\BookCategoryListResponse;
 use App\Repository\BookCategoryRepository;
 use App\Service\BookCategoryService;
 use App\Tests\AbstractTestCase;
-use PHPUnit\Framework\TestCase;
 
 class BookCategoryServiceTest extends AbstractTestCase
 {
@@ -21,8 +19,7 @@ class BookCategoryServiceTest extends AbstractTestCase
 
         $repository = $this->createMock(BookCategoryRepository::class);
         $repository->expects($this->once())
-            ->method('findBy')
-            ->with([], ['title' => 'ASC'])
+            ->method('findAllSortByTitle')
             ->willReturn([$category]);
 
         $service = new BookCategoryService($repository);
