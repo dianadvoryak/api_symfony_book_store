@@ -11,7 +11,7 @@ class ValidationException extends \RuntimeException
         parent::__construct('validation failed');
     }
 
-    public function getViolation(): ConstraintViolationListInterface
+    public function getViolations(): ConstraintViolationListInterface
     {
         return $this->violations;
     }
