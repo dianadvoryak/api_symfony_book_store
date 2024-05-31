@@ -21,7 +21,7 @@ class AbstractRepositoryTest extends KernelTestCase
 
         self::bootKernel();
         parent::setUp();
-//        $this->em = self::getContainer()->get('doctrine.orm.entity_manager');
+        $this->em = self::getContainer()->get('doctrine.orm.entity_manager');
         $this->em = self::bootKernel()->getContainer()->get('doctrine')->getManager();
     }
 
