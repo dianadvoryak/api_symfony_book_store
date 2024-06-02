@@ -52,9 +52,9 @@ class BookControllerTest extends AbstractControllerTest
             ->setTitle('Test book')
             ->setImage('http://localhost.png')
             ->setMeap(true)
-//            ->setIsbn('123321')
-//            ->setDescription('some description')
-            ->setPublicationDate(new \DateTime())
+            ->setIsbn('123321')
+            ->setDescription('some description')
+            ->setPublicationDate(new \DateTimeImmutable())
             ->setAuthor(['Tester'])
             ->setCategories(new ArrayCollection([$bookCategory]))
             ->setSlug('test-book'));

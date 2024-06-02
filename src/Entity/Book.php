@@ -27,7 +27,13 @@ class Book
     #[ORM\Column(type: 'simple_array')]
     private ?array $author = null;
 
-    #[ORM\Column(type: 'date')]
+    #[ORM\Column(type: 'string', length: 13, nullable: true)]
+    private ?string $isbn = null;
+
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $description = null;
+
+    #[ORM\Column(type: 'date_immutable', nullable: true)]
     private ?\DateTimeInterface $publicationDate = null;
 
     #[ORM\Column(type: 'boolean', options: ['default' => false])]
@@ -37,11 +43,26 @@ class Book
      * @var Collection<BookCategory>
      */
     #[ORM\ManyToMany(targetEntity: BookCategory::class)]
+    #[ORM\JoinTable(name: 'book_to_book_category')]
     private Collection $categories;
+
+    /**
+     * @var Collection<BookToBookFormat>
+     */
+    #[ORM\OneToMany(targetEntity: BookToBookFormat::class, mappedBy: 'book')]
+    private Collection $formats;
+
+    /**
+     * @var Collection<Review>
+     */
+    #[ORM\OneToMany(targetEntity: Review::class, mappedBy: 'book')]
+    private Collection $review;
 
     public function __construct()
     {
         $this->categories = new ArrayCollection();
+        $this->formats = new ArrayCollection();
+        $this->review = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -129,5 +150,50 @@ class Book
         $this->categories = $categories;
         return $this;
     }
+
+    public function getIsbn(): ?string
+    {
+        return $this->isbn;
+    }
+
+    public function setIsbn(?string $isbn): self
+    {
+        $this->isbn = $isbn;
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
+        return $this;
+    }
+
+    public function getFormats(): Collection
+    {
+        return $this->formats;
+    }
+
+    public function setFormats(Collection $formats): Book
+    {
+        $this->formats = $formats;
+        return $this;
+    }
+
+    public function getReview(): Collection
+    {
+        return $this->review;
+    }
+
+    public function setReview(Collection $review): Book
+    {
+        $this->review = $review;
+        return $this;
+    }
+
 
 }

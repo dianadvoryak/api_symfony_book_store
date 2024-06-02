@@ -30,4 +30,22 @@ class BookController extends AbstractController
     {
         return $this->json($this->bookService->getBooksByCategory($id));
     }
+
+    /**
+     * @OA\Response(
+     *     response=200,
+     *     description="Returns book detail information",
+     *     @Model(type=BookDetails::class)
+     * )
+     * @OA\Response(
+     *      response=404,
+     *      description="boot not found",
+     *      @Model(type=ErrorResponse::class)
+     *  )
+     */
+    #[Route('/api/v1/book/{id}', methods: ['GET'])]
+    public function bookById(int $id): Response
+    {
+        return $this->json($this->bookService->getBookById($id));
+    }
 }

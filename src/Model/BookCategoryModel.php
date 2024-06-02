@@ -2,7 +2,7 @@
 
 namespace App\Model;
 
-class BookCategoryListItem
+class BookCategoryModel
 {
     private int $id;
 
