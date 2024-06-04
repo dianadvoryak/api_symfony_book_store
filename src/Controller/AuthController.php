@@ -29,6 +29,6 @@ class AuthController extends AbstractController
     #[OA\RequestBody(attachables: [new Model(type: SignUpRequest::class)])]
     public function signUp(#[RequestBody] SignUpRequest $signUpRequest): Response
     {
-        return $this->json($this->signUpService->signUp($signUpRequest));
+        return $this->signUpService->signUp($signUpRequest);
     }
 }

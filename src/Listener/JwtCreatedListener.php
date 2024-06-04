@@ -12,7 +12,7 @@ class JwtCreatedListener
         /** @var User $user */
         $user = $event->getUser();
         $payload = $event->getData();
-        $payload['id'] = $user->getUserIdentifier();
+        $payload['id'] = $user->getId();
 
         $event->setData($payload);
     }
