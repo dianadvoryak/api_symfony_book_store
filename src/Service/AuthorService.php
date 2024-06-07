@@ -8,9 +8,11 @@ use App\Model\Author\BookListItem;
 use App\Model\Author\BookListResponse;
 use App\Model\Author\CreateBookRequest;
 use App\Model\Author\PublishBookRequest;
+use App\Model\Author\UploadCoverResponse;
 use App\Model\IdResponse;
 use App\Repository\BookRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\String\Slugger\SluggerInterface;
@@ -21,8 +23,25 @@ class AuthorService
         private EntityManagerInterface $em,
         private BookRepository $bookRepository,
         private SluggerInterface $slugger,
-        private Security $security
+        private Security $security,
+        private UploadService $uploadService,
     ) {
+    }
+
+    public function uploadCover(int $id, UploadedFile $file): UploadCoverResponse
+    {
+        $book = $this->bookRepository->getUserBookById($id, $this->security->getUser());
+        $oldImage = $book->getImage();
+        $link = $this->uploadService->uploadBookFile($id, $file);
+
+        $book->setImage($link);
+        $this->em->flush();
+
+        if (null !== $oldImage) {
+            $this->uploadService->deleteBookFile($book->getId(), basename($oldImage));
+        }
+
+        return new UploadCoverResponse($link);
     }
 
     public function publish(int $id, PublishBookRequest $publishBookRequest): void
