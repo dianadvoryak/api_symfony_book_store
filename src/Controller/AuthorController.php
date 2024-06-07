@@ -41,6 +41,30 @@ class AuthorController extends AbstractController
     {
     }
 
+    #[Route(path: '/api/v1/author/book/{id}/publish', methods: ['POST'])]
+//    #[IsGranted(AuthorBookVoter::IS_AUTHOR, subject: 'id')]
+    #[OA\Tag(name: 'Author API')]
+    #[OA\Response(response: 200, description: 'Publish a book')]
+    #[OA\Response(response: 400, description: 'Validation failed', attachables: [new Model(type: ErrorResponse::class)])]
+    #[OA\RequestBody(attachables: [new Model(type: PublishBookRequest::class)])]
+    public function publish(int $id, #[RequestBody] PublishBookRequest $request): Response
+    {
+        $this->authorService->publish($id, $request);
+
+        return $this->json(null);
+    }
+
+    #[Route(path: '/api/v1/author/book/{id}/unpublish', methods: ['POST'])]
+//    #[IsGranted(AuthorBookVoter::IS_AUTHOR, subject: 'id')]
+    #[OA\Tag(name: 'Author API')]
+    #[OA\Response(response: 200, description: 'Unpublish a book')]
+    public function unpublish(int $id): Response
+    {
+        $this->authorService->unpublish($id);
+
+        return $this->json(null);
+    }
+
     #[Route(path: '/api/v1/author/books', methods: ['GET'])]
     #[OA\Tag(name: 'Author API')]
     #[OA\Response(response: 200, description: 'Get authors owned books', attachables: [new Model(type: BookListResponse::class)])]

@@ -7,6 +7,7 @@ use App\Exception\BookAlreadyExistsException;
 use App\Model\Author\BookListItem;
 use App\Model\Author\BookListResponse;
 use App\Model\Author\CreateBookRequest;
+use App\Model\Author\PublishBookRequest;
 use App\Model\IdResponse;
 use App\Repository\BookRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -22,6 +23,16 @@ class AuthorService
         private SluggerInterface $slugger,
         private Security $security
     ) {
+    }
+
+    public function publish(int $id, PublishBookRequest $publishBookRequest): void
+    {
+        $this->setPublicationDate($id, $publishBookRequest->getDate());
+    }
+
+    public function unpublish(int $id): void
+    {
+        $this->setPublicationDate($id, null);
     }
 
     public function getBooks(): BookListResponse
@@ -55,6 +66,14 @@ class AuthorService
         $book = $this->bookRepository->getUserBookById($id, $this->security->getUser());
 
         $this->em->remove($book);
+        $this->em->flush();
+    }
+
+    public function setPublicationDate(int $id, ?\DateTimeInterface $dateTime): void
+    {
+        $book = $this->bookRepository->getUserBookById($id, $this->security->getUser());
+        $book->setPublicationDate($dateTime);
+
         $this->em->flush();
     }
 
