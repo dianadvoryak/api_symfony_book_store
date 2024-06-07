@@ -6,6 +6,7 @@ use App\Repository\BookRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: BookRepository::class)]
 class Book
@@ -21,10 +22,10 @@ class Book
     #[ORM\Column(type: 'string', length: 255)]
     private ?string $slug = null;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $image = null;
 
-    #[ORM\Column(type: 'simple_array')]
+    #[ORM\Column(type: 'simple_array', nullable: true)]
     private ?array $author = null;
 
     #[ORM\Column(type: 'string', length: 13, nullable: true)]
@@ -38,6 +39,10 @@ class Book
 
     #[ORM\Column(type: 'boolean', options: ['default' => false])]
     private bool $meap;
+
+    #[ORM\JoinColumn(nullable: true)]
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    private UserInterface $user;
 
     /**
      * @var Collection<BookCategory>
@@ -192,6 +197,17 @@ class Book
     public function setReview(Collection $review): Book
     {
         $this->review = $review;
+        return $this;
+    }
+
+    public function getUser(): UserInterface
+    {
+        return $this->user;
+    }
+
+    public function setUser(UserInterface $user): Book
+    {
+        $this->user = $user;
         return $this;
     }
 
