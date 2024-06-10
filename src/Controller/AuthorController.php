@@ -21,7 +21,6 @@ use App\Model\IdResponse;
 use App\Security\Voter\AuthorBookVoter;
 use App\Service\AuthorBookChapterService;
 use App\Service\AuthorBookService;
-use App\Service\AuthorService;
 use App\Service\BookContentService;
 use App\Service\BookPublishService;
 use Nelmio\ApiDocBundle\Annotation\Model;
@@ -32,19 +31,21 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
-use Symfony\Component\Validator\Constraints\NotNull;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Validator\Constraints\Image;
+use Symfony\Component\Validator\Constraints\NotNull;
 
 class AuthorController extends AbstractController
 {
     public function __construct(
-        private AuthorService $authorService
+        private AuthorBookService  $authorService,
+        private BookPublishService $bookPublishService,
     )
     {
     }
 
     #[Route(path: '/api/v1/author/book/{id}/uploadCover', methods: ['POST'])]
-//    #[IsGranted(AuthorBookVoter::IS_AUTHOR, subject: 'id')]
+    #[IsGranted(AuthorBookVoter::IS_AUTHOR, subject: 'id')]
     #[OA\Tag(name: 'Author API')]
     #[OA\Response(response: 200, description: 'Upload book cover', attachables: [new Model(type: UploadCoverResponse::class)])]
     #[OA\Response(response: 400, description: 'Validation failed', attachables: [new Model(type: ErrorResponse::class)])]
@@ -59,25 +60,25 @@ class AuthorController extends AbstractController
     }
 
     #[Route(path: '/api/v1/author/book/{id}/publish', methods: ['POST'])]
-//    #[IsGranted(AuthorBookVoter::IS_AUTHOR, subject: 'id')]
+    #[IsGranted(AuthorBookVoter::IS_AUTHOR, subject: 'id')]
     #[OA\Tag(name: 'Author API')]
     #[OA\Response(response: 200, description: 'Publish a book')]
     #[OA\Response(response: 400, description: 'Validation failed', attachables: [new Model(type: ErrorResponse::class)])]
     #[OA\RequestBody(attachables: [new Model(type: PublishBookRequest::class)])]
     public function publish(int $id, #[RequestBody] PublishBookRequest $request): Response
     {
-        $this->authorService->publish($id, $request);
+        $this->bookPublishService->publish($id, $request);
 
         return $this->json(null);
     }
 
     #[Route(path: '/api/v1/author/book/{id}/unpublish', methods: ['POST'])]
-//    #[IsGranted(AuthorBookVoter::IS_AUTHOR, subject: 'id')]
+    #[IsGranted(AuthorBookVoter::IS_AUTHOR, subject: 'id')]
     #[OA\Tag(name: 'Author API')]
     #[OA\Response(response: 200, description: 'Unpublish a book')]
     public function unpublish(int $id): Response
     {
-        $this->authorService->unpublish($id);
+        $this->bookPublishService->unpublish($id);
 
         return $this->json(null);
     }
@@ -101,7 +102,7 @@ class AuthorController extends AbstractController
     }
 
     #[Route(path: '/api/v1/author/book/{id}', methods: ['DELETE'])]
-//    #[IsGranted(AuthorBookVoter::IS_AUTHOR, subject: 'id')]
+    #[IsGranted(AuthorBookVoter::IS_AUTHOR, subject: 'id')]
     #[OA\Tag(name: 'Author API')]
     #[OA\Response(response: 200, description: 'Remove a book')]
     #[OA\Response(response: 404, description: 'book not found', attachables: [new Model(type: ErrorResponse::class)])]
