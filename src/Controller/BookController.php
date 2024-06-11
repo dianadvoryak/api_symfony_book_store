@@ -28,7 +28,7 @@ class BookController extends AbstractController
      * @OA\Response(
      *     response=200,
      *     description="Returns book detail information",
-     *     @Model(type=BookDetails::class)
+     *     @Model(type=AuthorBookDetails::class)
      * )
      * @OA\Response(
      *      response=404,

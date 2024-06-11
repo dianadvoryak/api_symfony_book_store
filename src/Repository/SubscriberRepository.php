@@ -23,12 +23,12 @@ class SubscriberRepository extends ServiceEntityRepository
 
     public function save(Subscriber $subscriber): void
     {
-        $this->em->persist($subscriber);
+        $this->getEntityManager()->persist($subscriber);
     }
 
     public function commit(): void
     {
-        $this->em->flush();
+        $this->getEntityManager()->flush();
     }
 
     public function saveAndCommit(Subscriber $subscriber): void

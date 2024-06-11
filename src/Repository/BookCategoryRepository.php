@@ -19,12 +19,12 @@ class BookCategoryRepository extends ServiceEntityRepository
 
     public function save(BookCategory $bookCategory): void
     {
-        $this->em->persist($bookCategory);
+        $this->getEntityManager()->persist($bookCategory);
     }
 
     public function remove(BookCategory $bookCategory): void
     {
-        $this->em->remove($bookCategory);
+        $this->getEntityManager()->remove($bookCategory);
     }
 
     public function saveAndCommit(BookCategory $bookCategory): void
@@ -41,7 +41,15 @@ class BookCategoryRepository extends ServiceEntityRepository
 
     public function commit(): void
     {
-        $this->em->flush();
+        $this->getEntityManager()->flush();
+    }
+
+    /**
+     * @return BookCategory[]
+     */
+    public function findBookCategoriesByIds(array $ids): array
+    {
+        return $this->findBy(['id' => $ids]);
     }
 
     /**

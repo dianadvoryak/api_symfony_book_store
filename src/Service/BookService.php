@@ -22,7 +22,6 @@ class BookService
     public function __construct(
         private BookRepository $bookRepository,
         private BookCategoryRepository $bookCategoryRepository,
-        private ReviewRepository $reviewRepository,
         private RatingService $ratingService
     ) {
     }
@@ -42,34 +41,13 @@ class BookService
     public function getBookById(int $id): BookDetails
     {
         $book = $this->bookRepository->getPublishedById($id);
-        $reviews = $this->reviewRepository->countByBookId($id);
-
-        $categories = $book->getCategories()
-            ->map(fn (BookCategory $bookCategory) => new BookCategoryModel(
-                $bookCategory->getId(), $bookCategory->getTitle(), $bookCategory->getSlug()
-            ));
+        $rating = $this->ratingService->calcReviewRatingForBook($id);
 
         return BookMapper::map($book, new BookDetails())
-            ->setRating($this->ratingService->calcReviewRatingForBook($id, $reviews))
-            ->setReviews($reviews)
-            ->setFormats($this->mapFormats($book->getFormats()))
-            ->setCategories($categories->toArray());
+            ->setRating($rating->getRating())
+            ->setReviews($rating->getTotal())
+            ->setFormats(BookMapper::mapFormats($book))
+            ->setCategories(BookMapper::mapCategories($book));
     }
 
-    /**
-     * @param Collection<BookToBookFormat> $formats
-     *
-     * @return array|Collection
-     */
-    private function mapFormats(Collection $formats): Collection
-    {
-        return $formats->map(fn (BookToBookFormat $formatJoin) => (new BookFormatModel())
-            ->setId($formatJoin->getFormat()->getId())
-            ->setTitle($formatJoin->getFormat()->getTitle())
-            ->setDescription($formatJoin->getFormat()->getDescription())
-            ->setComment($formatJoin->getFormat()->getComment())
-            ->setPrice($formatJoin->getPrice())
-            ->setDiscountPercent($formatJoin->getDiscountPercent())
-        );
-    }
 }

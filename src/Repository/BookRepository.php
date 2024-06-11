@@ -85,12 +85,12 @@ class BookRepository extends ServiceEntityRepository
 
     public function save(Book $book): void
     {
-        $this->em->persist($book);
+        $this->getEntityManager()->persist($book);
     }
 
     public function commit(): void
     {
-        $this->em->flush();
+        $this->getEntityManager()->flush();
     }
 
     public function saveAndCommit(Book $book): void
@@ -107,11 +107,11 @@ class BookRepository extends ServiceEntityRepository
 
     public function saveBookFormatReference(BookToBookFormat $bookToBookFormat): void
     {
-        $this->em->persist($bookToBookFormat);
+        $this->getEntityManager()->persist($bookToBookFormat);
     }
 
     public function removeBookFormatReference(BookToBookFormat $bookToBookFormat): void
     {
-        $this->em->remove($bookToBookFormat);
+        $this->getEntityManager()->remove($bookToBookFormat);
     }
 }
