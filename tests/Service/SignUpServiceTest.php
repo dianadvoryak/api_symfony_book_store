@@ -19,8 +19,6 @@ class SignUpServiceTest extends TestCase
 
     private UserRepository $userRepository;
 
-    private EntityManagerInterface $em;
-
     private AuthenticationSuccessHandler $successHandler;
 
     protected function setUp(): void
@@ -72,8 +70,7 @@ class SignUpServiceTest extends TestCase
             ->with($expectedHasherUser, 'testtest')
             ->willReturn('hashed_password');
 
-        $this->em->expects($this->once())->method('persist')->with($expectedUser);
-        $this->em->expects($this->once())->method('flush');
+        $this->userRepository->expects($this->once())->method('saveAndCommit')->with($expectedUser);
 
         $this->successHandler->expects($this->once())
             ->method('handleAuthenticationSuccess')

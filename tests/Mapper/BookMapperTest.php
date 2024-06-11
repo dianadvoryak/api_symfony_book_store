@@ -14,13 +14,13 @@ class BookMapperTest extends AbstractTestCase
     public function testMap()
     {
         $book = (new Book())->setTitle('title')->setSlug('slug')->setImage(123)
-            ->setAuthor(['tester'])->setMeap(true)
+            ->setAuthor(['tester'])
             ->setPublicationDate(new \DateTimeImmutable('2020-10-10'));
 
         $this->setEntityId($book, 1);
 
         $expected = (new BookDetails())->setId(1)->setSlug('slug')->setTitle('title')
-            ->setImage('123')->setAuthor(['tester'])->setMeap(true)
+            ->setImage('123')->setAuthor(['tester'])
             ->setPublicationDate(1602288000);
 
         $this->assertEquals($expected, BookMapper::map($book, new BookDetails()));

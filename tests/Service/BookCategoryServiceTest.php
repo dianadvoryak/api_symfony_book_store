@@ -8,6 +8,7 @@ use App\Model\BookCategoryListResponse;
 use App\Repository\BookCategoryRepository;
 use App\Service\BookCategoryService;
 use App\Tests\AbstractTestCase;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 class BookCategoryServiceTest extends AbstractTestCase
 {
@@ -22,7 +23,9 @@ class BookCategoryServiceTest extends AbstractTestCase
             ->method('findAllSortByTitle')
             ->willReturn([$category]);
 
-        $service = new BookCategoryService($repository);
+        $slugger = $this->createMock(SluggerInterface::class);
+
+        $service = new BookCategoryService($repository, $slugger);
         $expected = new BookCategoryListResponse([new BookCategoryModel(7, 'Test', 'test')]);
 
         $this->assertEquals($expected, $service->getCategories());

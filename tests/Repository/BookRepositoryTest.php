@@ -6,6 +6,7 @@ use App\Entity\Book;
 use App\Entity\BookCategory;
 use App\Repository\BookRepository;
 use App\Tests\AbstractRepositoryTest;
+use App\Tests\MockUtils;
 use Doctrine\Common\Collections\ArrayCollection;
 use PHPUnit\Framework\TestCase;
 
@@ -22,11 +23,17 @@ class BookRepositoryTest extends AbstractRepositoryTest
 
     public function testFindBooksByCategoryId(): void
     {
-        $devicesCategory = (new BookCategory())->setTitle('Devices')->setSlug('devices');
+        $user = MockUtils::createUser();
+        $this->em->persist($user);
+
+        $devicesCategory = MockUtils::createBookCategory();
         $this->em->persist($devicesCategory);
 
         for($i = 0; $i < 5; $i++) {
-            $book = $this->createBook('devices' . $i, $devicesCategory);
+            $book = MockUtils::createBook()->setUser($user)
+                ->setTitle('device-'.$i)
+                ->setCategories(new ArrayCollection([$devicesCategory]));
+
             $this->em->persist($book);
         }
 
@@ -40,7 +47,6 @@ class BookRepositoryTest extends AbstractRepositoryTest
         return (new Book())
             ->setPublicationDate(new \DateTimeImmutable())
             ->setAuthor(['author'])
-            ->setMeap(false)
             ->setIsbn('123321')
             ->setDescription('some description')
             ->setSlug($title)

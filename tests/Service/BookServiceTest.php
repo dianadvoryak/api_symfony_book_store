@@ -13,28 +13,30 @@ use App\Repository\ReviewRepository;
 use App\Service\BookService;
 use App\Service\RatingService;
 use App\Tests\AbstractTestCase;
+use App\Tests\MockUtils;
 use Doctrine\Common\Collections\ArrayCollection;
 
 class BookServiceTest extends AbstractTestCase
 {
-    private ReviewRepository $reviewRepository;
+    private RatingService $ratingService;
 
     private BookRepository $bookRepository;
 
-    private BookCategoryRepository $bookCategoryRepository;
+    private BookChapterService $bookChapterService;
 
-    private RatingService $ratingService;
+    private BookCategoryRepository $bookCategoryRepository;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->reviewRepository = $this->createMock(ReviewRepository::class);
+
         $this->bookRepository = $this->createMock(BookRepository::class);
         $this->bookCategoryRepository = $this->createMock(BookCategoryRepository::class);
+        $this->bookChapterService = $this->createMock(BookChapterService::class);
         $this->ratingService = $this->createMock(RatingService::class);
     }
 
-    public function testGetBooksByCategoryNotFound()
+    public function testGetBooksByCategoryNotFound(): void
     {
         $this->bookCategoryRepository->expects($this->once())
             ->method('existsById')
@@ -63,34 +65,74 @@ class BookServiceTest extends AbstractTestCase
         $this->assertEquals($expected, $this->createBookService()->getBooksByCategory(130));
     }
 
+    public function testGetBookById(): void
+    {
+        $book = $this->createBookEntity();
+
+        $this->bookChapterService->expects($this->once())
+            ->method('getChaptersTree')
+            ->with($book)
+            ->willReturn(new BookChapterTreeResponse());
+
+        $this->bookRepository->expects($this->once())
+            ->method('getPublishedById')
+            ->with(123)
+            ->willReturn($book);
+
+        $this->ratingService->expects($this->once())
+            ->method('calcReviewRatingForBook')
+            ->with(123)
+            ->willReturn(new Rating(10, 5.5));
+
+        $format = (new BookFormatModel())
+            ->setId(1)
+            ->setTitle('format')
+            ->setDescription('description format')
+            ->setComment(null)
+            ->setPrice(123.55)
+            ->setDiscountPercent(5);
+
+        $expected = (new BookDetails())->setId(123)
+            ->setRating(5.5)
+            ->setReviews(10)
+            ->setSlug('test-book')
+            ->setTitle('Test book')
+            ->setImage('http://localhost.png')
+            ->setAuthors(['Tester'])
+            ->setCategories([
+                new BookCategoryModel(1, 'Devices', 'devices'),
+            ])
+            ->setPublicationDate(1_602_288_000)
+            ->setFormats([$format])
+            ->setChapters([]);
+
+        $this->assertEquals($expected, $this->createBookService()->getBookById(123));
+    }
+
     private function createBookService(): BookService
     {
         return new BookService(
             $this->bookRepository,
             $this->bookCategoryRepository,
-            $this->reviewRepository,
-            $this->ratingService
+            $this->ratingService,
         );
     }
 
     private function createBookEntity(): Book
     {
-        $category = (new BookCategory())->setTitle('Category')->setSlug('category');
+        $category = MockUtils::createBookCategory();
         $this->setEntityId($category, 1);
 
-        $book = (new Book())
-            ->setTitle('Test Book')
-            ->setSlug('test-book')
-            ->setMeap(false)
-            ->setIsbn('123321')
-            ->setDescription('test description')
-            ->setAuthor(['Tester'])
-            ->setImage('http://localhost/test.png')
-            ->setCategories(new ArrayCollection([$category]))
-            ->setPublicationDate(new \DateTimeImmutable('2020-10-10'));
-        //            ->setFormats(new ArrayCollection([$join]));
+        $format = MockUtils::createBookFormat();
+        $this->setEntityId($format, 1);
 
+        $book = MockUtils::createBook()->setCategories(new ArrayCollection([$category]));
         $this->setEntityId($book, 123);
+
+        $join = MockUtils::createBookFormatLink($book, $format);
+        $this->setEntityId($join, 1);
+
+        $book->setFormats(new ArrayCollection([$join]));
 
         return $book;
     }
@@ -99,11 +141,10 @@ class BookServiceTest extends AbstractTestCase
     {
         return (new BookListItem())
             ->setId(123)
-            ->setTitle('Test Book')
+            ->setTitle('Test book')
             ->setSlug('test-book')
-            ->setMeap(false)
             ->setAuthor(['Tester'])
-            ->setImage('http://localhost/test.png')
-            ->setPublicationDate(1602288000);
+            ->setImage('http://localhost.png')
+            ->setPublicationDate(1_602_288_000);
     }
 }

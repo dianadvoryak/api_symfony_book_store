@@ -20,7 +20,6 @@ class BookDetails
      */
     private array $author;
 
-    private bool $meap;
 
     private int $publicationDate;
 
@@ -94,18 +93,6 @@ class BookDetails
     public function setAuthor(array $author): BookDetails
     {
         $this->author = $author;
-
-        return $this;
-    }
-
-    public function isMeap(): bool
-    {
-        return $this->meap;
-    }
-
-    public function setMeap(bool $meap): BookDetails
-    {
-        $this->meap = $meap;
 
         return $this;
     }

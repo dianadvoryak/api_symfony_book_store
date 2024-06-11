@@ -98,7 +98,6 @@ class AuthorBookService
 
         $book = (new Book())
             ->setTitle($request->getTitle())
-            ->setMeap(false)
             ->setSlug($slug)
             ->setUser($user);
 

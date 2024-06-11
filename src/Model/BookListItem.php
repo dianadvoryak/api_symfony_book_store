@@ -17,8 +17,6 @@ class BookListItem
      */
     private array $author;
 
-    private bool $meap;
-
     private int $publicationDate;
 
     public function getId(): int
@@ -77,17 +75,6 @@ class BookListItem
     public function setAuthor(array $author): self
     {
         $this->author = $author;
-        return $this;
-    }
-
-    public function isMeap(): bool
-    {
-        return $this->meap;
-    }
-
-    public function setMeap(bool $meap): self
-    {
-        $this->meap = $meap;
         return $this;
     }
 
