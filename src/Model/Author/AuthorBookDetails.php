@@ -18,7 +18,7 @@ class AuthorBookDetails
     /**
      * @var string[]
      */
-    private ?string $authors;
+    private ?array $authors;
 
     private ?string $isbn;
 
@@ -85,7 +85,7 @@ class AuthorBookDetails
         return $this->authors;
     }
 
-    public function setAuthors(?string $authors): AuthorBookDetails
+    public function setAuthors(?array $authors): AuthorBookDetails
     {
         $this->authors = $authors;
         return $this;
