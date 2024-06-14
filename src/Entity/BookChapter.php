@@ -23,6 +23,16 @@ class BookChapter
     #[ORM\Column(type: 'string', length: 255)]
     private string $title;
 
+    #[ORM\Column(type: 'integer', options: ['default' => 0])]
+    private int $sort = 0;
+
+    #[ORM\Column(type: 'integer')]
+    private int $level;
+
+    #[ORM\JoinColumn(nullable: true)]
+    #[ORM\ManyToOne(targetEntity: BookChapter::class)]
+    private ?BookChapter $parent = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -59,5 +69,43 @@ class BookChapter
     {
         $this->title = $title;
         return $this;
+    }
+
+    public function getSort(): int
+    {
+        return $this->sort;
+    }
+
+    public function setSort(int $sort): BookChapter
+    {
+        $this->sort = $sort;
+        return $this;
+    }
+
+    public function getLevel(): int
+    {
+        return $this->level;
+    }
+
+    public function setLevel(int $level): BookChapter
+    {
+        $this->level = $level;
+        return $this;
+    }
+
+    public function getParent(): ?BookChapter
+    {
+        return $this->parent;
+    }
+
+    public function setParent(?BookChapter $parent): BookChapter
+    {
+        $this->parent = $parent;
+        return $this;
+    }
+
+    public function hasParent(): bool
+    {
+        return null !== $this->parent;
     }
 }
