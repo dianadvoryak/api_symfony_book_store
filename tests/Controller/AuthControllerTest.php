@@ -11,13 +11,13 @@ class AuthControllerTest extends AbstractControllerTest
         $this->client->request('POST', '/api/v1/auth/signUp', [], [], [], json_encode([
             'firstName' => 'Vasya',
             'lastName' => 'Testov',
-            'email' => 'test123@test.com',
-            'password' => '12341234',
-            'confirmPassword' => '12341234',
+            'email' => 'test@test.com',
+            'password' => '1234567854',
+            'confirmPassword' => '1234567854',
         ]));
 
-        $responseContent = json_decode($this->client->getResponse()->getContent());
-//        var_dump($responseContent);die();
+        $responseContent = json_decode($this->client->getResponse()->getContent(), null, 512, JSON_THROW_ON_ERROR);
+
         $this->assertResponseIsSuccessful();
         $this->assertJsonDocumentMatchesSchema($responseContent, [
             'type' => 'object',

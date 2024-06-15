@@ -27,8 +27,7 @@ class AuthorBookChapterService
         private BookRepository $bookRepository,
         private BookChapterRepository $bookChapterRepository,
         private SluggerInterface $slugger
-    )
-    {
+    ) {
     }
 
     public function createChapter(CreateBookChapterRequest $request, int $bookId): IdResponse
@@ -81,7 +80,7 @@ class AuthorBookChapterService
 
     public function getChaptersTree(int $bookId): BookChapterTreeResponse
     {
-//        return $this->bookChapterService->getChaptersTree($this->bookRepository->getBookById($bookId));
+        //        return $this->bookChapterService->getChaptersTree($this->bookRepository->getBookById($bookId));
         $book = $this->bookRepository->getBookById($bookId);
         $chapters = $this->bookChapterRepository->findSortedChaptersByBook($book);
         $response = new BookChapterTreeResponse();
@@ -92,7 +91,7 @@ class AuthorBookChapterService
             $model = new BookChapterModel($chapter->getId(), $chapter->getTitle(), $chapter->getSlug());
             $index[$chapter->getId()] = $model;
 
-            if(!$chapter->hasParent()) {
+            if (!$chapter->hasParent()) {
                 $response->addItem($model);
                 continue;
             }

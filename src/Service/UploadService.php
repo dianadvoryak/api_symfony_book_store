@@ -17,7 +17,7 @@ class UploadService
 
     public function deleteBookFile(int $id, string $fileName): void
     {
-        $this->fs->remove($this->getUploadPathForBook($id) . DIRECTORY_SEPARATOR . $fileName);
+        $this->fs->remove($this->getUploadPathForBook($id).DIRECTORY_SEPARATOR.$fileName);
     }
 
     public function uploadBookFile(int $bookId, UploadedFile $file): string
@@ -28,7 +28,6 @@ class UploadService
         }
 
         $uniqueName = Uuid::v4()->toRfc4122().'.'.$extension;
-        $uploadPath = $this->uploadDir . DIRECTORY_SEPARATOR . 'book' . DIRECTORY_SEPARATOR . $bookId;
 
         $file->move($this->getUploadPathForBook($bookId), $uniqueName);
 
@@ -37,6 +36,6 @@ class UploadService
 
     private function getUploadPathForBook(int $id): string
     {
-        return $this->uploadDir . DIRECTORY_SEPARATOR . 'book' . DIRECTORY_SEPARATOR . $id;
+        return $this->uploadDir.DIRECTORY_SEPARATOR.'book'.DIRECTORY_SEPARATOR.$id;
     }
 }

@@ -4,6 +4,7 @@ namespace App\Mapper;
 
 use App\Entity\Book;
 use App\Entity\BookCategory;
+use App\Entity\BookFormat;
 use App\Entity\BookToBookFormat;
 use App\Model\Author\AuthorBookDetails;
 use App\Model\BookCategoryModel;
@@ -13,19 +14,19 @@ use App\Model\BookListItem;
 
 class BookMapper
 {
-    public static function map(Book $book, BookDetails|BookListItem|AuthorBookDetails $model): BookDetails|BookListItem
+    public static function map(Book $book, BaseBookDetails $model): void
     {
         $publicationDate = $book->getPublicationDate();
         if (null !== $publicationDate) {
-            $publicationDate = $book->getPublicationDate()->getTimestamp();
+            $publicationDate = $publicationDate->getTimestamp();
         }
 
-        return $model
+        $model
             ->setId($book->getId())
             ->setTitle($book->getTitle())
             ->setSlug($book->getSlug())
             ->setImage($book->getImage())
-            ->setAuthor($book->getAuthor())
+            ->setAuthors($book->getAuthors())
             ->setPublicationDate($publicationDate);
     }
 
@@ -44,7 +45,7 @@ class BookMapper
     public static function mapFormats(Book $book): array
     {
         return $book->getFormats()
-            ->map(fn (BookToBookFormat $formatJoin) => (new BookFormatModel())
+            ->map(fn (BookToBookFormat $formatJoin) => (new BookFormat())
                 ->setId($formatJoin->getFormat()->getId())
                 ->setTitle($formatJoin->getFormat()->getTitle())
                 ->setDescription($formatJoin->getFormat()->getDescription())

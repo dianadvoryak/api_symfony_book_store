@@ -3,29 +3,16 @@
 namespace App\Model;
 
 use App\Entity\BookCategory;
-use Doctrine\Common\Collections\Collection;
+use App\Entity\BookChapter;
+use App\Entity\BookFormat;
 
 class BookDetails
 {
-    private int $id;
-
-    private string $title;
-
-    private string $slug;
-
-    private string $image;
-
-    /**
-     * @var string[]
-     */
-    private array $author;
-
-
-    private int $publicationDate;
-
     private float $rating;
 
     private int $reviews;
+
+    private array $chapters;
 
     /**
      * @var BookCategory[]
@@ -33,88 +20,16 @@ class BookDetails
     private array $categories;
 
     /**
-     * @var BookFormatModel[]
+     * @var BookFormat[]
      */
-    private Collection $formats;
-
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
-    public function setId(int $id): BookDetails
-    {
-        $this->id = $id;
-
-        return $this;
-    }
-
-    public function getTitle(): string
-    {
-        return $this->title;
-    }
-
-    public function setTitle(string $title): BookDetails
-    {
-        $this->title = $title;
-
-        return $this;
-    }
-
-    public function getSlug(): string
-    {
-        return $this->slug;
-    }
-
-    public function setSlug(string $slug): BookDetails
-    {
-        $this->slug = $slug;
-
-        return $this;
-    }
-
-    public function getImage(): string
-    {
-        return $this->image;
-    }
-
-    public function setImage(string $image): BookDetails
-    {
-        $this->image = $image;
-
-        return $this;
-    }
-
-    public function getAuthor(): array
-    {
-        return $this->author;
-    }
-
-    public function setAuthor(array $author): BookDetails
-    {
-        $this->author = $author;
-
-        return $this;
-    }
-
-    public function getPublicationDate(): int
-    {
-        return $this->publicationDate;
-    }
-
-    public function setPublicationDate(int $publicationDate): BookDetails
-    {
-        $this->publicationDate = $publicationDate;
-
-        return $this;
-    }
+    private array $formats;
 
     public function getRating(): float
     {
         return $this->rating;
     }
 
-    public function setRating(float $rating): BookDetails
+    public function setRating(float $rating): self
     {
         $this->rating = $rating;
 
@@ -126,7 +41,7 @@ class BookDetails
         return $this->reviews;
     }
 
-    public function setReviews(int $reviews): BookDetails
+    public function setReviews(int $reviews): self
     {
         $this->reviews = $reviews;
 
@@ -138,21 +53,38 @@ class BookDetails
         return $this->categories;
     }
 
-    public function setCategories(array $categories): BookDetails
+    public function setCategories(array $categories): self
     {
         $this->categories = $categories;
 
         return $this;
     }
 
-    public function getFormats(): Collection
+    public function getFormats(): array
     {
         return $this->formats;
     }
 
-    public function setFormats(Collection $formats): BookDetails
+    public function setFormats(array $formats): self
     {
         $this->formats = $formats;
+
+        return $this;
+    }
+
+    public function getChapters(): array
+    {
+        return $this->chapters;
+    }
+
+    /**
+     * @param BookChapter[] $chapters
+     *
+     * @return $this
+     */
+    public function setChapters(array $chapters): self
+    {
+        $this->chapters = $chapters;
 
         return $this;
     }

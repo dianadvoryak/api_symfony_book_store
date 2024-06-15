@@ -18,7 +18,7 @@ class AdminController extends AbstractController
 {
     public function __construct(
         private RoleService $roleService,
-        private BookCategoryService $bookCategoryService,)
+        private BookCategoryService $bookCategoryService)
     {
     }
 

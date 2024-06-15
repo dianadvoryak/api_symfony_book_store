@@ -13,7 +13,7 @@ abstract class AbstractControllerTest extends WebTestCase
 {
     use JsonAssertions;
 
-    protected  KernelBrowser $client;
+    protected KernelBrowser $client;
 
     protected ?EntityManagerInterface $em;
 
@@ -26,8 +26,7 @@ abstract class AbstractControllerTest extends WebTestCase
         $_ENV['JWT_PUBLIC_KEY'] = $_ENV['JWT_PUBLIC_KEY'] ?? '%kernel.project_dir%/config/jwt/public.pem';
         $_SERVER['JWT_PUBLIC_KEY'] = $_SERVER['JWT_PUBLIC_KEY'] ?? '%kernel.project_dir%/config/jwt/public.pem';
 
-//
-//        self::bootKernel();
+        //        self::bootKernel();
         parent::setUp();
         $this->client = static::createClient();
         $this->em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
@@ -79,6 +78,29 @@ abstract class AbstractControllerTest extends WebTestCase
         return $this->createUserWithRoles($username, $password, ['ROLE_AUTHOR']);
     }
 
+    protected function createAdminAndAuth(string $username, string $password): User
+    {
+        $user = $this->createAdmin($username, $password);
+        $this->auth($username, $password);
+
+        return $user;
+    }
+
+    protected function createAuthorAndAuth(string $username, string $password): User
+    {
+        $user = $this->createAuthor($username, $password);
+        $this->auth($username, $password);
+
+        return $user;
+    }
+
+    protected function createUserAndAuth(string $username, string $password): User
+    {
+        $user = $this->createUser($username, $password);
+        $this->auth($username, $password);
+
+        return $user;
+    }
 
     private function createUserWithRoles(string $username, string $password, array $roles): User
     {

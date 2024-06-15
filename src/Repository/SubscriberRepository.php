@@ -22,9 +22,4 @@ class SubscriberRepository extends ServiceEntityRepository
     {
         return null !== $this->findOneBy(['email' => $email]);
     }
-
-    public function save(Subscriber $subscriber): void
-    {
-        $this->getEntityManager()->persist($subscriber);
-    }
 }

@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\SubscriberRepository;
-use Cassandra\Date;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\HasLifecycleCallbacks]

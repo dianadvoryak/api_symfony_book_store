@@ -29,20 +29,11 @@ class RequestBodyArgumentResolverTest extends AbstractTestCase
         $this->validator = $this->createMock(ValidatorInterface::class);
     }
 
-    public function testSupport(): void
-    {
-        $meta = new ArgumentMetadata('some', null, false, false, null, false, [
-            new RequestBody(),
-        ]);
-
-        $this->assertTrue($this->createResolver()->supports(new Request(), $meta));
-    }
-
-    public function testNotSupport(): void
+    public function testNotSupports(): void
     {
         $meta = new ArgumentMetadata('some', null, false, false, null);
 
-        $this->assertFalse($this->createResolver()->supports(new Request(), $meta));
+        $this->assertEmpty($this->createResolver()->resolve(new Request(), $meta));
     }
 
     public function testResolveThrowsWhenDeserialize(): void
@@ -50,7 +41,6 @@ class RequestBodyArgumentResolverTest extends AbstractTestCase
         $this->expectException(RequestBodyConvertException::class);
 
         $request = new Request([], [], [], [], [], [], 'testing content');
-
         $meta = new ArgumentMetadata('some', \stdClass::class, false, false, null, false, [
             new RequestBody(),
         ]);
@@ -60,7 +50,7 @@ class RequestBodyArgumentResolverTest extends AbstractTestCase
             ->with('testing content', \stdClass::class, JsonEncoder::FORMAT)
             ->willThrowException(new \Exception());
 
-        $this->createResolver()->resolve($request, $meta)->next();
+        $this->createResolver()->resolve($request, $meta);
     }
 
     public function testResolveThrowsWhenValidationFails(): void
@@ -71,7 +61,6 @@ class RequestBodyArgumentResolverTest extends AbstractTestCase
         $encodedBody = json_encode($body);
 
         $request = new Request([], [], [], [], [], [], $encodedBody);
-
         $meta = new ArgumentMetadata('some', \stdClass::class, false, false, null, false, [
             new RequestBody(),
         ]);
@@ -88,7 +77,7 @@ class RequestBodyArgumentResolverTest extends AbstractTestCase
                 new ConstraintViolation('error', null, [], null, 'some', null),
             ]));
 
-        $this->createResolver()->resolve($request, $meta)->next();
+        $this->createResolver()->resolve($request, $meta);
     }
 
     public function testResolve(): void
@@ -97,7 +86,6 @@ class RequestBodyArgumentResolverTest extends AbstractTestCase
         $encodedBody = json_encode($body);
 
         $request = new Request([], [], [], [], [], [], $encodedBody);
-
         $meta = new ArgumentMetadata('some', \stdClass::class, false, false, null, false, [
             new RequestBody(),
         ]);
@@ -114,7 +102,7 @@ class RequestBodyArgumentResolverTest extends AbstractTestCase
 
         $actual = $this->createResolver()->resolve($request, $meta);
 
-        $this->assertEquals($body, $actual->current());
+        $this->assertEquals($body, $actual[0]);
     }
 
     private function createResolver(): RequestBodyArgumentResolver

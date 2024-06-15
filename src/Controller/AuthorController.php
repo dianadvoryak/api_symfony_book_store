@@ -27,6 +27,7 @@ use Nelmio\ApiDocBundle\Annotation\Model;
 use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -38,10 +39,10 @@ use Symfony\Component\Validator\Constraints\NotNull;
 class AuthorController extends AbstractController
 {
     public function __construct(
-        private AuthorBookService  $authorService,
-        private BookPublishService $bookPublishService,
-        private AuthorBookChapterService $bookChapterService
-    )
+        private readonly AuthorBookService $authorService,
+        private readonly BookPublishService $bookPublishService,
+        private readonly AuthorBookChapterService $bookChapterService,
+        private readonly BookContentService $bookContentService)
     {
     }
 
@@ -130,7 +131,7 @@ class AuthorController extends AbstractController
     #[Route(path: '/api/v1/author/book/{id}', methods: ['GET'])]
     #[IsGranted(AuthorBookVoter::IS_AUTHOR, subject: 'id')]
     #[OA\Tag(name: 'Author API')]
-    #[OA\Response(response: 200, description: 'Get authors owned book', attachables: [new Model(type: AuthorBookDetails::class)])]
+    #[OA\Response(response: 200, description: 'Get authors owned book', attachables: [new Model(type: BookDetails::class)])]
     #[OA\Response(response: 404, description: 'book not found', attachables: [new Model(type: ErrorResponse::class)])]
     public function book(int $id): Response
     {
@@ -195,5 +196,54 @@ class AuthorController extends AbstractController
         $this->bookChapterService->deleteChapter($id);
 
         return $this->json(null);
+    }
+
+    #[Route(path: '/api/v1/author/book/{bookId}/chapter/{chapterId}/content', methods: ['POST'])]
+    #[IsGranted(AuthorBookVoter::IS_AUTHOR, subject: 'bookId')]
+    #[OA\Tag(name: 'Author API')]
+    #[OA\Response(response: 200, description: 'Create a book chapter content', attachables: [new Model(type: IdResponse::class)])]
+    #[OA\Response(response: 400, description: 'Validation failed', attachables: [new Model(type: ErrorResponse::class)])]
+    #[OA\RequestBody(attachables: [new Model(type: CreateBookChapterContentRequest::class)])]
+    public function createBookChapterContent(#[RequestBody] CreateBookChapterContentRequest $request, int $bookId, int $chapterId): Response
+    {
+        return $this->json($this->bookContentService->createContent($request, $chapterId));
+    }
+
+    #[Route(path: '/api/v1/author/book/{bookId}/chapter/{chapterId}/content/{id}', methods: ['DELETE'])]
+    #[IsGranted(AuthorBookVoter::IS_AUTHOR, subject: 'bookId')]
+    #[OA\Tag(name: 'Author API')]
+    #[OA\Response(response: 200, description: 'Remove a book chapter content')]
+    #[OA\Response(response: 404, description: 'Book chapter content not found', attachables: [new Model(type: ErrorResponse::class)])]
+    public function deleteBookChapterContent(int $id, int $bookId): Response
+    {
+        $this->bookContentService->deleteContent($id);
+
+        return $this->json(null);
+    }
+
+    #[Route(path: '/api/v1/author/book/{bookId}/chapter/{chapterId}/content/{id}', methods: ['POST'])]
+    #[IsGranted(AuthorBookVoter::IS_AUTHOR, subject: 'bookId')]
+    #[OA\Tag(name: 'Author API')]
+    #[OA\Response(response: 200, description: 'Update a book chapter content')]
+    #[OA\Response(response: 404, description: 'Book chapter content not found', attachables: [new Model(type: ErrorResponse::class)])]
+    #[OA\Response(response: 400, description: 'Validation failed', attachables: [new Model(type: ErrorResponse::class)])]
+    #[OA\RequestBody(attachables: [new Model(type: CreateBookChapterContentRequest::class)])]
+    public function updateBookChapterContent(#[RequestBody] CreateBookChapterContentRequest $request, int $bookId, int $id): Response
+    {
+        $this->bookContentService->updateContent($request, $id);
+
+        return $this->json(null);
+    }
+
+    #[Route(path: '/api/v1/author/book/{bookId}/chapter/{chapterId}/content', methods: ['GET'])]
+    #[IsGranted(AuthorBookVoter::IS_AUTHOR, subject: 'bookId')]
+    #[OA\Tag(name: 'Author API')]
+    #[OA\Parameter(name: 'page', description: 'Page number', in: 'query', schema: new OA\Schema(type: 'integer'))]
+    #[OA\Response(response: 200, description: 'Get book chapter content', attachables: [new Model(type: BookChapterContentPage::class)])]
+    public function chapterContent(Request $request, int $chapterId, int $bookId): Response
+    {
+        return $this->json(
+            $this->bookContentService->getAllContent($chapterId, (int) $request->query->get('page', 1))
+        );
     }
 }

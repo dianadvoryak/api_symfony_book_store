@@ -10,7 +10,6 @@ use PHPUnit\Framework\TestCase;
 
 class BookMapperTest extends AbstractTestCase
 {
-
     public function testMap()
     {
         $book = (new Book())->setTitle('title')->setSlug('slug')->setImage(123)
