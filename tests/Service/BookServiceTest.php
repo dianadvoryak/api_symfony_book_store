@@ -10,6 +10,7 @@ use App\Model\BookListResponse;
 use App\Repository\BookCategoryRepository;
 use App\Repository\BookRepository;
 use App\Repository\ReviewRepository;
+use App\Service\BookChapterService;
 use App\Service\BookService;
 use App\Service\RatingService;
 use App\Tests\AbstractTestCase;
@@ -114,6 +115,7 @@ class BookServiceTest extends AbstractTestCase
         return new BookService(
             $this->bookRepository,
             $this->bookCategoryRepository,
+            $this->bookChapterService,
             $this->ratingService,
         );
     }

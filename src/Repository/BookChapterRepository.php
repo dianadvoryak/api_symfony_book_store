@@ -33,7 +33,7 @@ class BookChapterRepository extends ServiceEntityRepository
 
     public function getMaxSort(Book $book, int $level): int
     {
-        return (int) $this->em
+        return (int) $this->_em
             ->createQuery('SELECT MAX(c.sort) FROM App\Entity\BookChapter c WHERE c.book = :book AND c.level = :level')
             ->setParameter('book', $book)
             ->setParameter('level', $level)
@@ -47,7 +47,7 @@ UPDATE App\Entity\BookChapter c SET c.sort = c.sort + :sortStep
 WHERE c.sort >= :sortStart AND c.book = :book AND c.level = :level
 SQL;
 
-        $this->em->createQuery($sql)
+        $this->_em->createQuery($sql)
             ->setParameter('book', $book)
             ->setParameter('level', $level)
             ->setParameter('sortStart', $sortStart)

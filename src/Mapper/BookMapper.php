@@ -26,7 +26,7 @@ class BookMapper
             ->setTitle($book->getTitle())
             ->setSlug($book->getSlug())
             ->setImage($book->getImage())
-            ->setAuthors($book->getAuthors())
+            ->setAuthors($book->getAuthor())
             ->setPublicationDate($publicationDate);
     }
 

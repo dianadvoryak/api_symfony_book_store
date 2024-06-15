@@ -8,7 +8,6 @@ use App\Repository\BookRepository;
 use App\Tests\AbstractRepositoryTest;
 use App\Tests\MockUtils;
 use Doctrine\Common\Collections\ArrayCollection;
-use PHPUnit\Framework\TestCase;
 
 class BookRepositoryTest extends AbstractRepositoryTest
 {
@@ -29,7 +28,7 @@ class BookRepositoryTest extends AbstractRepositoryTest
         $devicesCategory = MockUtils::createBookCategory();
         $this->em->persist($devicesCategory);
 
-        for($i = 0; $i < 5; $i++) {
+        for ($i = 0; $i < 5; ++$i) {
             $book = MockUtils::createBook()->setUser($user)
                 ->setTitle('device-'.$i)
                 ->setCategories(new ArrayCollection([$devicesCategory]));
